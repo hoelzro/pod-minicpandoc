@@ -316,19 +316,20 @@ Pod::Minicpandoc - perldoc that works for modules you don't have installed
 C<minicpandoc> is a perl script that acts like C<perldoc> except that
 if it would have bailed out with
 C<No documentation found for "Uninstalled::Module">, it will instead
-scrape a CPAN index for the module's documentation.
+consult your minicpan, or scrape a CPAN index for the module's documentation
+if that doesn't work.  It is a fork of L<cpandoc>, with added support for
+consulting a minicpan.
 
 One important feature of C<minicpandoc> is that it I<only> scrapes the
-live index if you do not have the module installed. So if you use
-C<minicpandoc> on a module you already have installed, then it will
-just read the already-installed documentation. This means that the
-version of the documentation matches up with the version of the
+live index if you do not have the module installed and if it cannot grab it
+from your minicpan. So if you use C<minicpandoc> on a module you already have
+installed, then it will just read the already-installed documentation. This
+means that the version of the documentation matches up with the version of the
 code you have. As a fringe benefit, C<minicpandoc> will be fast for
 modules you've installed. :)
 
 All this means that you should be able to drop in C<minicpandoc> in
-place of C<perldoc> and have everything keep working. See
-L</SNEAKY INSTALL> for how to do this.
+place of C<perldoc> and have everything keep working.
 
 If you set the environment variable C<MINICPANDOC_FETCH> to a true value,
 then we will print a message to STDERR telling you that C<minicpandoc> is
@@ -336,12 +337,17 @@ going to make a request against the live CPAN index.
 
 =head1 SEE ALSO
 
-L<Pod::Cpandoc>
+L<Pod::Cpandoc>, L<CPAN::Mini>
 
 =head1 AUTHOR
 
 Shawn M Moore C<sartak@gmail.com> (original implementation)
 Rob Hoelz C<rob@hoelz.ro> (minicpan support)
+
+=head1 THANKS
+
+Many thanks to Shawn M Moore, for writing L<Pod::Cpandoc> and giving me
+something base this on!
 
 =head1 COPYRIGHT
 
