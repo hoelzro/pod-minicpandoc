@@ -1,5 +1,9 @@
 Revision history for Pod-Cpandoc
 
+0.12 2011-12-15
+    - fork from Pod::Cpandoc
+    - add minicpan support
+
 0.11 2011-07-17
     - add support for `cpandoc URL` (requested by Claes Jakobsson)
 
