@@ -1,8 +1,8 @@
 use inc::Module::Install;
 
-name           'Pod-Cpandoc';
-all_from       'lib/Pod/Cpandoc.pm';
-readme_from    'lib/Pod/Cpandoc.pm';
+name           'Pod-Minicpandoc';
+all_from       'lib/Pod/Minicpandoc.pm';
+readme_from    'lib/Pod/Minicpandoc.pm';
 githubmeta;
 
 requires       'HTTP::Tiny';
@@ -11,7 +11,7 @@ requires       'Archive::Zip';
 requires       'File::Spec';
 requires       'IO::Uncompress::Gunzip';
 
-install_script 'bin/cpandoc';
+install_script 'bin/minicpandoc';
 
 manifest_skip;
 auto_manifest;
