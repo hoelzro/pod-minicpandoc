@@ -36,7 +36,7 @@ sub fetch_url {
     }
 
     my $ua = HTTP::Tiny->new(
-        agent => "minicpandoc/$VERSION",
+        agent => "mcpandoc/$VERSION",
     );
 
     my $response = $ua->get($url);
@@ -293,46 +293,46 @@ Pod::Minicpandoc - perldoc that works for modules you don't have installed
 
 =head1 SYNOPSIS
 
-    minicpandoc File::Find
+    mcpandoc File::Find
         -- shows the documentation of your installed File::Find
 
-    minicpandoc Acme::BadExample
+    mcpandoc Acme::BadExample
         -- works even if you don't have Acme::BadExample installed!
 
-    minicpandoc -v '$?'
+    mcpandoc -v '$?'
         -- passes everything through to regular perldoc
 
-    minicpandoc -m Acme::BadExample | grep system
+    mcpandoc -m Acme::BadExample | grep system
         -- options are respected even if the module was scraped
 
-    vim `minicpandoc -l Web::Scraper`
+    vim `mcpandoc -l Web::Scraper`
         -- getting the idea yet?
 
-    minicpandoc http://darkpan.org/Eval::WithLexicals::AndGlobals
+    mcpandoc http://darkpan.org/Eval::WithLexicals::AndGlobals
         -- URLs work too!
 
 =head1 DESCRIPTION
 
-C<minicpandoc> is a perl script that acts like C<perldoc> except that
+C<mcpandoc> is a perl script that acts like C<perldoc> except that
 if it would have bailed out with
 C<No documentation found for "Uninstalled::Module">, it will instead
 consult your minicpan, or scrape a CPAN index for the module's documentation
 if that doesn't work.  It is a fork of L<cpandoc>, with added support for
 consulting a minicpan.
 
-One important feature of C<minicpandoc> is that it I<only> scrapes the
+One important feature of C<mcpandoc> is that it I<only> scrapes the
 live index if you do not have the module installed and if it cannot grab it
-from your minicpan. So if you use C<minicpandoc> on a module you already have
+from your minicpan. So if you use C<mcpandoc> on a module you already have
 installed, then it will just read the already-installed documentation. This
 means that the version of the documentation matches up with the version of the
-code you have. As a fringe benefit, C<minicpandoc> will be fast for
+code you have. As a fringe benefit, C<mcpandoc> will be fast for
 modules you've installed. :)
 
-All this means that you should be able to drop in C<minicpandoc> in
+All this means that you should be able to drop in C<mcpandoc> in
 place of C<perldoc> and have everything keep working.
 
 If you set the environment variable C<MINICPANDOC_FETCH> to a true value,
-then we will print a message to STDERR telling you that C<minicpandoc> is
+then we will print a message to STDERR telling you that C<mcpandoc> is
 going to make a request against the live CPAN index.
 
 =head1 SEE ALSO
