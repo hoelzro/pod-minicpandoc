@@ -11,7 +11,7 @@ requires       'Archive::Zip';
 requires       'File::Spec';
 requires       'IO::Uncompress::Gunzip';
 
-install_script 'bin/minicpandoc';
+install_script 'bin/mcpandoc';
 
 manifest_skip;
 auto_manifest;
