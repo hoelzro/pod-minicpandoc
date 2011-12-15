@@ -1,4 +1,4 @@
-package Pod::Cpandoc;
+package Pod::Minicpandoc;
 use 5.8.1;
 use strict;
 use warnings;
@@ -31,12 +31,12 @@ sub fetch_url {
 
     $self->aside("Going to query $url\n");
 
-    if ($ENV{CPANDOC_FETCH}) {
+    if ($ENV{MINICPANDOC_FETCH}) {
         print STDERR "Fetching $url\n";
     }
 
     my $ua = HTTP::Tiny->new(
-        agent => "cpandoc/$VERSION",
+        agent => "minicpandoc/$VERSION",
     );
 
     my $response = $ua->get($url);
@@ -278,7 +278,7 @@ sub searchfor {
 sub opt_V {
     my $self = shift;
 
-    print "Cpandoc v$VERSION, ";
+    print "Minicpandoc v$VERSION, ";
 
     return $self->SUPER::opt_V(@_);
 }
@@ -289,88 +289,59 @@ __END__
 
 =head1 NAME
 
-Pod::Cpandoc - perldoc that works for modules you don't have installed
+Pod::Minicpandoc - perldoc that works for modules you don't have installed
 
 =head1 SYNOPSIS
 
-    cpandoc File::Find
+    minicpandoc File::Find
         -- shows the documentation of your installed File::Find
 
-    cpandoc Acme::BadExample
+    minicpandoc Acme::BadExample
         -- works even if you don't have Acme::BadExample installed!
 
-    cpandoc -v '$?'
+    minicpandoc -v '$?'
         -- passes everything through to regular perldoc
 
-    cpandoc -m Acme::BadExample | grep system
+    minicpandoc -m Acme::BadExample | grep system
         -- options are respected even if the module was scraped
 
-    vim `cpandoc -l Web::Scraper`
+    vim `minicpandoc -l Web::Scraper`
         -- getting the idea yet?
 
-    cpandoc http://darkpan.org/Eval::WithLexicals::AndGlobals
+    minicpandoc http://darkpan.org/Eval::WithLexicals::AndGlobals
         -- URLs work too!
 
 =head1 DESCRIPTION
 
-C<cpandoc> is a perl script that acts like C<perldoc> except that
+C<minicpandoc> is a perl script that acts like C<perldoc> except that
 if it would have bailed out with
 C<No documentation found for "Uninstalled::Module">, it will instead
 scrape a CPAN index for the module's documentation.
 
-One important feature of C<cpandoc> is that it I<only> scrapes the
+One important feature of C<minicpandoc> is that it I<only> scrapes the
 live index if you do not have the module installed. So if you use
-C<cpandoc> on a module you already have installed, then it will
+C<minicpandoc> on a module you already have installed, then it will
 just read the already-installed documentation. This means that the
 version of the documentation matches up with the version of the
-code you have. As a fringe benefit, C<cpandoc> will be fast for
+code you have. As a fringe benefit, C<minicpandoc> will be fast for
 modules you've installed. :)
 
-All this means that you should be able to drop in C<cpandoc> in
+All this means that you should be able to drop in C<minicpandoc> in
 place of C<perldoc> and have everything keep working. See
 L</SNEAKY INSTALL> for how to do this.
 
-If you set the environment variable C<CPANDOC_FETCH> to a true value,
-then we will print a message to STDERR telling you that C<cpandoc> is
+If you set the environment variable C<MINICPANDOC_FETCH> to a true value,
+then we will print a message to STDERR telling you that C<minicpandoc> is
 going to make a request against the live CPAN index.
-
-=head1 TRANSLATIONS
-
-=over 4
-
-=item Japanese
-
-    Japanese documentation can be found at
-    L<http://perldoc.jp/docs/modules/Pod-Cpandoc-0.09/Cpandoc.pod>,
-    contributed by @bayashi.
-
-=back
-
-=head1 SNEAKY INSTALL
-
-    cpanm Pod::Cpandoc
-
-    then: alias perldoc=cpandoc
-    or:   function perldoc () { cpandoc "$@" }
-
-    Now `perldoc Acme::BadExample` works!
-
-C<perldoc> should continue to work for everything that you're used
-to, since C<cpandoc> passes all options through to it. C<cpandoc>
-is merely a subclass that falls back to scraping a CPAN index when
-it fails to find your queried file in C<@INC>.
 
 =head1 SEE ALSO
 
-The sneaky install was inspired by L<https://github.com/defunkt/hub>.
-
-L<http://tech.bayashi.jp/archives/entry/perl-module/2011/003305.html>
-
-L<http://sartak.org/talks/yapc-na-2011/cpandoc/>
+L<Pod::Cpandoc>
 
 =head1 AUTHOR
 
-Shawn M Moore C<sartak@gmail.com>
+Shawn M Moore C<sartak@gmail.com> (original implementation)
+Rob Hoelz C<rob@hoelz.ro> (minicpan support)
 
 =head1 COPYRIGHT
 
