@@ -31,7 +31,7 @@ sub fetch_url {
 
     $self->aside("Going to query $url\n");
 
-    if ($ENV{MINICPANDOC_FETCH}) {
+    if ($ENV{MCPANDOC_FETCH}) {
         print STDERR "Fetching $url\n";
     }
 
@@ -331,7 +331,7 @@ modules you've installed. :)
 All this means that you should be able to drop in C<mcpandoc> in
 place of C<perldoc> and have everything keep working.
 
-If you set the environment variable C<MINICPANDOC_FETCH> to a true value,
+If you set the environment variable C<MCPANDOC_FETCH> to a true value,
 then we will print a message to STDERR telling you that C<mcpandoc> is
 going to make a request against the live CPAN index.
 
