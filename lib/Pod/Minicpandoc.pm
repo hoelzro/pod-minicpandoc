@@ -175,18 +175,6 @@ sub get_archive_files {
 sub find_module_file {
     my ( $self, $module, @files ) = @_;
 
-    $module =~ s!::!/!g;
-    my $pod = $module;
-
-    $module .= '.pm';
-    $pod    .= '.pod';
-
-    my $base = $module;
-    $base    =~ s!.*/!!;
-
-    my $pod_base = $pod;
-    $pod_base    =~ s!.*/!!;
-
     my %topdirs = map {
         my $file = $_;
         $file    =~ s!/.*!!;
@@ -202,16 +190,35 @@ sub find_module_file {
         @files = map { s/^\Q$prefix\E//; $_ } @files;
     }
 
-    my @tests = (
-        "lib/$pod",
-        $pod,
-        $pod_base,
+    my @tests;
 
-        "lib/$module",
-        $module,
-        $base,
-    );
+    if($self->opt_c) {
+        @tests = (
+            'Changes',
+        );
+    } else {
+        $module =~ s!::!/!g;
+        my $pod = $module;
 
+        $module .= '.pm';
+        $pod    .= '.pod';
+
+        my $base = $module;
+        $base    =~ s!.*/!!;
+
+        my $pod_base = $pod;
+        $pod_base    =~ s!.*/!!;
+
+        @tests = (
+            "lib/$pod",
+            $pod,
+            $pod_base,
+
+            "lib/$module",
+            $module,
+            $base,
+        );
+    }
     foreach my $test (@tests) {
         if(my @matches = grep { $_ eq $test } @files) {
             return $prefix . $matches[0];
@@ -250,7 +257,13 @@ sub fetch_from_minicpan {
     my @files = $self->get_archive_files($archive);
     my $file  = $self->find_module_file($module, @files);
     if($file) {
-        return $self->extract_archive_file($archive, $file);
+        my $content = $self->extract_archive_file($archive, $file);
+
+        if($self->opt_c) {
+            $content = "=pod\n\n$content";
+        }
+
+        return $content;
     }
 }
 
@@ -265,7 +278,7 @@ sub scrape_documentation_for {
         $content = $self->fetch_url($module);
     }
     else {
-        if($self->use_minicpan && !$self->opt_c) {
+        if($self->use_minicpan) {
             $content = $self->fetch_from_minicpan($module);
         }
 
