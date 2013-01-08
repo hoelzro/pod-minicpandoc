@@ -420,8 +420,7 @@ L<http://sartak.org/talks/yapc-na-2011/cpandoc/>
 
 =head1 AUTHOR
 
-Shawn M Moore C<sartak@gmail.com> (original implementation)
-Rob Hoelz C<rob@hoelz.ro> (minicpan support)
+Shawn M Moore C<sartak@gmail.com> (original implementation), Rob Hoelz C<rob@hoelz.ro> (minicpan support)
 
 =head1 THANKS
 
