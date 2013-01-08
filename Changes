@@ -6,6 +6,7 @@ Revision history for Pod-Cpandoc
           https://github.com/sartak/pod-cpandoc/pull/7
       - add -c for reading the Changes of a dist (requested by many users)
           https://github.com/sartak/pod-cpandoc/issues/2
+    - Use .pod files if they exist in minicpan
 
 0.12 2011-12-15
     - fork from Pod::Cpandoc
