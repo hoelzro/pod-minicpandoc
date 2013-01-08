@@ -255,7 +255,7 @@ sub scrape_documentation_for {
         $content = $self->fetch_url($module);
     }
     else {
-        if($self->use_minicpan) {
+        if($self->use_minicpan && !$self->opt_c) {
             $content = $self->fetch_from_minicpan($module);
         }
 
