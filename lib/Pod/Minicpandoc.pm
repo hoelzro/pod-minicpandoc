@@ -176,10 +176,16 @@ sub find_module_file {
     my ( $self, $module, @files ) = @_;
 
     $module =~ s!::!/!g;
+    my $pod = $module;
+
     $module .= '.pm';
+    $pod    .= '.pod';
 
     my $base = $module;
     $base    =~ s!.*/!!;
+
+    my $pod_base = $pod;
+    $pod_base    =~ s!.*/!!;
 
     my %topdirs = map {
         my $file = $_;
@@ -197,6 +203,10 @@ sub find_module_file {
     }
 
     my @tests = (
+        "lib/$pod",
+        $pod,
+        $pod_base,
+
         "lib/$module",
         $module,
         $base,
