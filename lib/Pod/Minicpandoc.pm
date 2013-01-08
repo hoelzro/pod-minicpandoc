@@ -10,14 +10,31 @@ use HTTP::Tiny;
 use File::Spec;
 use File::Temp 'tempfile';
 use IO::Uncompress::Gunzip;
+use JSON ();
 
-our $VERSION = '0.11';
+our $VERSION = '0.13';
+
+sub opt_c { shift->_elem('opt_c', @_) }
 
 sub live_cpan_url {
     my $self   = shift;
     my $module = shift;
 
-    return "http://api.metacpan.org/source/$module";
+    if ($self->opt_c) {
+        my $module_json = $self->fetch_url("http://api.metacpan.org/module/$module");
+        if (!$module_json) {
+            die "Unable to fetch changes for $module";
+        }
+        my $module_details = JSON::decode_json($module_json);
+        my $dist = $module_details->{distribution};
+        return "http://api.metacpan.org/v0/changes/$dist";
+    }
+    elsif ($self->opt_m) {
+        return "http://api.metacpan.org/source/$module";
+    }
+    else {
+        return "http://api.metacpan.org/pod/$module?content-type=text/x-pod";
+    }
 }
 
 sub unlink_tempfiles {
@@ -55,7 +72,14 @@ sub query_live_cpan_for {
     my $module = shift;
 
     my $url = $self->live_cpan_url($module);
-    return $self->fetch_url($url);
+    my $content = $self->fetch_url($url);
+
+    if ($self->opt_c) {
+        $content = JSON::decode_json($content)->{content};
+        $content = "=pod\n\n$content";
+    }
+
+    return $content;
 }
 
 sub use_minicpan {
@@ -226,6 +250,8 @@ sub scrape_documentation_for {
 
     my $content;
     if ($module =~ m{^https?://}) {
+        die "Can't use -c on arbitrary URLs, only module names"
+            if $self->opt_c;
         $content = $self->fetch_url($module);
     }
     else {
@@ -243,7 +269,7 @@ sub scrape_documentation_for {
     $module =~ s/::/-/g;
     my ($fh, $fn) = tempfile(
         "${module}-XXXX",
-        SUFFIX => ".pm",
+        SUFFIX => ($self->opt_c ? ".txt" : ".pm"),
         UNLINK => $self->unlink_tempfiles,
         TMPDIR => 1,
     );
@@ -256,6 +282,10 @@ sub scrape_documentation_for {
 our $QUERY_CPAN;
 sub grand_search_init {
     my $self = shift;
+
+    if ($self->opt_c) {
+        return $self->scrape_documentation_for($_[0][0]);
+    }
 
     local $QUERY_CPAN = 1;
     return $self->SUPER::grand_search_init(@_);
@@ -299,6 +329,9 @@ Pod::Minicpandoc - perldoc that works for modules you don't have installed
     mcpandoc Acme::BadExample
         -- works even if you don't have Acme::BadExample installed!
 
+    mcpandoc -c Text::Xslate
+        -- shows the changelog file for Text::Xslate
+
     mcpandoc -v '$?'
         -- passes everything through to regular perldoc
 
@@ -329,15 +362,38 @@ code you have. As a fringe benefit, C<mcpandoc> will be fast for
 modules you've installed. :)
 
 All this means that you should be able to drop in C<mcpandoc> in
-place of C<perldoc> and have everything keep working.
+place of C<perldoc> and have everything keep working.  See
+L</SNEAKY INSTALL> for how to do this.
 
 If you set the environment variable C<MCPANDOC_FETCH> to a true value,
 then we will print a message to STDERR telling you that C<mcpandoc> is
 going to make a request against the live CPAN index.
 
+=head1 SNEAKY INSTALL
+
+    cpanm Pod::Minicpandoc
+
+    then: alias perldoc=mcpandoc
+    or:   function perldoc () { mcpandoc "$@" }
+
+    Now `perldoc Acme::BadExample` works!
+
+C<perldoc> should continue to work for everything that you're used
+to, since C<mcpandoc> passes all options through to it. C<mcpandoc>
+is merely a subclass that falls back to scraping a CPAN index when
+it fails to find your queried file in C<@INC>.
+
 =head1 SEE ALSO
 
 L<Pod::Cpandoc>, L<CPAN::Mini>
+
+The sneaky install was inspired by L<https://github.com/defunkt/hub>.
+
+L<http://tech.bayashi.jp/archives/entry/perl-module/2011/003305.html>
+
+L<http://perladvent.org/2011/2011-12-15.html>
+
+L<http://sartak.org/talks/yapc-na-2011/cpandoc/>
 
 =head1 AUTHOR
 
@@ -351,7 +407,7 @@ something base this on!
 
 =head1 COPYRIGHT
 
-Copyright 2011 Robert Hoelz.
+Copyright 2011-2013 Robert Hoelz.
 
 This program is free software; you can redistribute it and/or modify it under the same terms as Perl itself.
 

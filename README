@@ -9,6 +9,9 @@ SYNOPSIS
         mcpandoc Acme::BadExample
             -- works even if you don't have Acme::BadExample installed!
 
+        mcpandoc -c Text::Xslate
+            -- shows the changelog file for Text::Xslate
+
         mcpandoc -v '$?'
             -- passes everything through to regular perldoc
 
@@ -46,6 +49,14 @@ DESCRIPTION
 SEE ALSO
     Pod::Cpandoc, CPAN::Mini
 
+    The sneaky install was inspired by <https://github.com/defunkt/hub>.
+
+    <http://tech.bayashi.jp/archives/entry/perl-module/2011/003305.html>
+
+    <http://perladvent.org/2011/2011-12-15.html>
+
+    <http://sartak.org/talks/yapc-na-2011/cpandoc/>
+
 AUTHOR
     Shawn M Moore "sartak@gmail.com" (original implementation) Rob Hoelz
     "rob@hoelz.ro" (minicpan support)
@@ -55,7 +66,7 @@ THANKS
     something base this on!
 
 COPYRIGHT
-    Copyright 2011 Robert Hoelz.
+    Copyright 2011-2013 Robert Hoelz.
 
     This program is free software; you can redistribute it and/or modify it
     under the same terms as Perl itself.
