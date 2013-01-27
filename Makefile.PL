@@ -10,7 +10,7 @@ requires       'Archive::Tar';
 requires       'Archive::Zip';
 requires       'File::Spec';
 requires       'IO::Uncompress::Gunzip';
-requires       'JSON';
+requires       'JSON::PP';
 
 install_script 'bin/mcpandoc';
 
