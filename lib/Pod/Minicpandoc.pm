@@ -12,7 +12,7 @@ use File::Temp 'tempfile';
 use IO::Uncompress::Gunzip;
 use JSON::PP ();
 
-our $VERSION = '0.14';
+our $VERSION = '0.15';
 
 sub opt_c { shift->_elem('opt_c', @_) }
 
@@ -27,7 +27,7 @@ sub live_cpan_url {
         }
         my $module_details = JSON::PP::decode_json($module_json);
         my $dist = $module_details->{distribution};
-        return "http://api.metacpan.org/v0/changes/$dist";
+        return "http://api.metacpan.org/v0/changes/$dist?fields=content";
     }
     elsif ($self->opt_m) {
         return "http://api.metacpan.org/v0/source/$module";
