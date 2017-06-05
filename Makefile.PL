@@ -10,6 +10,8 @@ requires       'Archive::Tar';
 requires       'Archive::Zip';
 requires       'File::Spec';
 requires       'IO::Uncompress::Gunzip';
+requires       'IO::Socket::SSL', '1.56';
+requires       'Net::SSLeay',     '1.49';
 requires       'JSON::PP';
 
 install_script 'bin/mcpandoc';
